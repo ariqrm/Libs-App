@@ -1,13 +1,16 @@
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
-import React from 'react';
+import React, {Component} from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
+import {Provider} from 'react-redux';
+import store from './src/Publics/Store';
 import {Icon} from 'native-base';
 import Login from './src/Screens/Auth/Login';
 import Register from './src/Screens/Auth/Register';
 import Home from './src/Screens/Home/Home';
 import History from './src/Screens/Home/History';
 import Profile from './src/Screens/Home/Profile';
+import BookDetail from './src/Screens/Home/BookDetail';
 
 const MainHome = createBottomTabNavigator({
   Home: {
@@ -69,6 +72,10 @@ const MainHome = createBottomTabNavigator({
 const HomeStack = createStackNavigator(
   {
     Home: MainHome,
+    BookDetail: {
+      screen: BookDetail,
+      title: 'BookDetail',
+    },
   },
   {
     headerMode: 'none',
@@ -91,11 +98,12 @@ const AuthStack = createStackNavigator(
   },
 );
 
-const App = createAppContainer(
+const ContentApp = createAppContainer(
   createSwitchNavigator(
     {
       AuthStack,
       HomeStack,
+      // DetailBook,
     },
     // {
     //   initialRouteName: AuthStack,
@@ -103,4 +111,12 @@ const App = createAppContainer(
   ),
 );
 
-export default App;
+export default class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <ContentApp />
+      </Provider>
+    );
+  }
+}

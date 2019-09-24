@@ -15,7 +15,7 @@ class Carousel extends React.Component {
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        style={{flexDirection: 'row', paddingLeft: 20}}>
+        style={{flexDirection: 'row', paddingLeft: 20, paddingRight: 20}}>
         <View style={styles.CarouselBox}>
           <View style={styles.Title}>
             <Text style={styles.TitleText}>Action</Text>
@@ -23,7 +23,7 @@ class Carousel extends React.Component {
           <View style={styles.Image}>
             <Image
               style={styles.Image}
-              source={require('../Assets/Icons/icon.png')}
+              source={require('../Assets/Icons/hunter_x_hunter.png')}
             />
           </View>
         </View>
@@ -35,7 +35,7 @@ class Carousel extends React.Component {
           <View style={styles.Image}>
             <Image
               style={styles.Image}
-              source={require('../Assets/Icons/icon.png')}
+              source={require('../Assets/Icons/SAO.png')}
             />
           </View>
         </View>
@@ -47,7 +47,31 @@ class Carousel extends React.Component {
           <View style={styles.Image}>
             <Image
               style={styles.Image}
-              source={require('../Assets/Icons/icon.png')}
+              source={require('../Assets/Icons/kiminonawa.png')}
+            />
+          </View>
+        </View>
+
+        <View style={styles.CarouselBox}>
+          <View style={styles.Title}>
+            <Text style={styles.TitleText}>Mystery</Text>
+          </View>
+          <View style={styles.Image}>
+            <Image
+              style={styles.Image}
+              source={require('../Assets/Icons/talesofzeteria.png')}
+            />
+          </View>
+        </View>
+
+        <View style={styles.CarouselBox}>
+          <View style={styles.Title}>
+            <Text style={styles.TitleText}>Horror</Text>
+          </View>
+          <View style={styles.Image}>
+            <Image
+              style={styles.Image}
+              source={require('../Assets/Icons/deathnote.png')}
             />
           </View>
         </View>

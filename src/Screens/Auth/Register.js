@@ -1,15 +1,29 @@
 import React, {Component} from 'react';
 import {Text, StyleSheet} from 'react-native';
 import {Form, Input, Content, Button} from 'native-base';
+import {connect} from 'react-redux';
+import {signIn, signUp} from '../../Publics/Actions/Users';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const GRAY = '#6969697a';
 const LIGHT_GRAY = '#D3D3D3';
 
-export default class Auth extends Component {
+class Auth extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isFocused: false,
+      data: [],
+      user: [],
+      formData: {
+        username: '',
+        full_name: '',
+        email: '',
+        password: '',
+      },
+      token: '',
+      Response: false,
+      isUpdateData: false,
     };
   }
   handleFocus = event => {
@@ -28,7 +42,52 @@ export default class Auth extends Component {
       this.props.onBlur(event);
     }
   };
+  handleLogin = (name, text) => {
+    const newFormData = {
+      ...this.state.formData,
+    };
+    newFormData[name] = text;
+    this.setState({
+      formData: newFormData,
+    });
+    console.log(this.state.formData);
+  };
+  handleSubmit = () => {
+    const dataUser = this.state.formData;
+    this.props.SignUp(dataUser).then(res => {
+      const data = res.action.payload.data;
+      if (data.success) {
+        this.props
+          .SignIn(dataUser)
+          .then(resSignin => {
+            const DASI = resSignin.action.payload.data;
+            if (DASI.success) {
+              AsyncStorage.setItem('@storage_Key', DASI.data.token);
+              this.props.navigation.navigate('Home');
+              console.log(DASI);
+            } else {
+              this.setState({
+                data: DASI,
+                Response: true,
+              });
+              alert('wrong input');
+              console.log(DASI);
+            }
+          })
+          .catch(err => alert('wrong input'));
+      }
+    });
+  };
+  handleDataAuth = () => {
+    AsyncStorage.getItem('@storage_Key', (err, res) => {
+      if (res !== null) {
+        this.props.navigation.navigate('Home');
+        // value previously stored
+      }
+    });
+  };
   render() {
+    this.handleDataAuth();
     const {isFocused} = this.state;
     const {onFocus, onBlur, ...otherProps} = this.props;
     return (
@@ -36,6 +95,7 @@ export default class Auth extends Component {
         <Text style={style.welcomeText}>Here Top</Text>
         <Form>
           <Input
+            onChangeText={text => this.handleLogin('username', text)}
             placeholder="Username"
             selectionColor={GRAY}
             underlineColorAndroid={isFocused ? GRAY : LIGHT_GRAY}
@@ -45,6 +105,7 @@ export default class Auth extends Component {
             {...otherProps}
           />
           <Input
+            onChangeText={text => this.handleLogin('full_name', text)}
             placeholder="Full name"
             selectionColor={GRAY}
             underlineColorAndroid={isFocused ? GRAY : LIGHT_GRAY}
@@ -54,6 +115,7 @@ export default class Auth extends Component {
             {...otherProps}
           />
           <Input
+            onChangeText={text => this.handleLogin('email', text)}
             placeholder="Email"
             selectionColor={GRAY}
             underlineColorAndroid={isFocused ? GRAY : LIGHT_GRAY}
@@ -64,6 +126,7 @@ export default class Auth extends Component {
             {...otherProps}
           />
           <Input
+            onChangeText={text => this.handleLogin('password', text)}
             placeholder="Password"
             selectionColor={GRAY}
             underlineColorAndroid={isFocused ? GRAY : LIGHT_GRAY}
@@ -74,7 +137,11 @@ export default class Auth extends Component {
             {...otherProps}
             secureTextEntry={true}
           />
-          <Button style={style.buttons} transparent light>
+          <Button
+            style={style.buttons}
+            transparent
+            light
+            onPress={this.handleSubmit}>
             <Text style={style.buttonsText}>Sign Up</Text>
           </Button>
         </Form>
@@ -116,3 +183,19 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    SignIn: data => dispatch(signIn(data)),
+    SignUp: data => dispatch(signUp(data)),
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Auth);

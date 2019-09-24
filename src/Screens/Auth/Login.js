@@ -1,15 +1,27 @@
 import React, {Component} from 'react';
 import {Text, StyleSheet} from 'react-native';
 import {Form, View, Input, Content, Button} from 'native-base';
+import {connect} from 'react-redux';
+import {signIn} from '../../Publics/Actions/Users';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const GRAY = '#6969697a';
 const LIGHT_GRAY = '#D3D3D3';
 
-export default class Auth extends Component {
+class Auth extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isFocused: false,
+      data: [],
+      user: [],
+      formData: {
+        email: '',
+        password: '',
+      },
+      token: '',
+      Response: false,
+      isUpdateData: false,
     };
   }
   handleFocus = event => {
@@ -24,7 +36,49 @@ export default class Auth extends Component {
       this.props.onBlur(event);
     }
   };
+  handleLogin = (name, text) => {
+    const newFormData = {
+      ...this.state.formData,
+    };
+    newFormData[name] = text;
+    this.setState({
+      formData: newFormData,
+    });
+    console.log(this.state.formData);
+  };
+  handleSubmit = () => {
+    const dataUser = this.state.formData;
+    this.props
+      .SignIn(dataUser)
+      .then(res => {
+        const data = res.action.payload.data;
+        if (data.success) {
+          AsyncStorage.setItem('@storage_Key', data.data.token);
+          this.props.navigation.navigate('Home');
+          console.log(data);
+        } else {
+          this.setState({
+            data: data,
+            Response: true,
+          });
+          alert('username or password not match');
+          console.log(data);
+        }
+      })
+      // .catch(err => console.log('error: ', err));
+      .catch(err => alert('username or password not match'));
+  };
+  handleDataAuth = () => {
+    AsyncStorage.getItem('@storage_Key', (err, res) => {
+      if (res !== null) {
+        this.props.navigation.navigate('Home');
+        // value previously stored
+      }
+    });
+  };
   render() {
+    this.handleDataAuth();
+    // console.log(this.props);
     const {isFocused} = this.state;
     const {onFocus, onBlur, ...otherProps} = this.props;
     return (
@@ -32,6 +86,7 @@ export default class Auth extends Component {
         <Text style={style.welcomeText}>Here To Get Welcomed !</Text>
         <Form style={style.form}>
           <Input
+            onChangeText={text => this.handleLogin('email', text)}
             placeholder="Email"
             selectionColor={GRAY}
             underlineColorAndroid={isFocused ? GRAY : LIGHT_GRAY}
@@ -42,12 +97,13 @@ export default class Auth extends Component {
             {...otherProps}
           />
           <Input
+            onChangeText={text => this.handleLogin('password', text)}
             placeholder="Password"
             selectionColor={GRAY}
             underlineColorAndroid={isFocused ? GRAY : LIGHT_GRAY}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
-            textContentType="emailAddress"
+            textContentType="password"
             style={style.inputAuth}
             {...otherProps}
             secureTextEntry={true}
@@ -56,7 +112,7 @@ export default class Auth extends Component {
             style={style.buttons}
             transparent
             light
-            onPress={() => this.props.navigation.navigate('Home')}>
+            onPress={this.handleSubmit}>
             <Text style={style.buttonsText}>SignIn</Text>
           </Button>
         </Form>
@@ -123,3 +179,18 @@ const style = StyleSheet.create({
     borderRadius: 5,
   },
 });
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    SignIn: data => dispatch(signIn(data)),
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Auth);
