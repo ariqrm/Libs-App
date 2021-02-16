@@ -12,14 +12,15 @@ class Auth extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: false,
       isFocused: false,
       data: [],
       user: [],
       formData: {
-        username: '',
-        full_name: '',
-        email: '',
-        password: '',
+        // username: '',
+        // full_name: '',
+        // email: '',
+        // password: '',
       },
       token: '',
       Response: false,
@@ -92,8 +93,8 @@ class Auth extends Component {
     const {onFocus, onBlur, ...otherProps} = this.props;
     return (
       <Content style={style.root}>
-        <Text style={style.welcomeText}>Here Top</Text>
-        <Form>
+        <Text style={style.welcomeText}>Register</Text>
+        <Form onSubmit={this.handleSubmit}>
           <Input
             onChangeText={text => this.handleLogin('username', text)}
             placeholder="Username"
@@ -142,7 +143,9 @@ class Auth extends Component {
             transparent
             light
             onPress={this.handleSubmit}>
-            <Text style={style.buttonsText}>Sign Up</Text>
+            <Text style={style.buttonsText}>
+              {this.state.isLoading ? 'Loading' : 'Sign Up'}
+            </Text>
           </Button>
         </Form>
         <Button

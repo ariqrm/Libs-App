@@ -1,6 +1,6 @@
 import Axios from 'axios';
 // import AsyncStorage from '@react-native-community/async-storage';
-const host = 'http://192.168.100.72:3010';
+const host = 'http://192.168.43.248:3010';
 // const getData = async () => {
 //   try {
 //     const value = await AsyncStorage.getItem('@storage_Key');

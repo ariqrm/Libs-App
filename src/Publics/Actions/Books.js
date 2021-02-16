@@ -1,5 +1,5 @@
 import Axios from 'axios';
-const host = 'http://192.168.100.72:3010';
+const host = 'http://192.168.43.248:3010';
 // const getData = async () => {
 //   try {
 //     const value = await AsyncStorage.getItem('@storage_Key');

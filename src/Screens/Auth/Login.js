@@ -16,8 +16,8 @@ class Auth extends Component {
       data: [],
       user: [],
       formData: {
-        email: '',
-        password: '',
+        // email: '',
+        // password: '',
       },
       token: '',
       Response: false,
@@ -44,7 +44,6 @@ class Auth extends Component {
     this.setState({
       formData: newFormData,
     });
-    console.log(this.state.formData);
   };
   handleSubmit = () => {
     const dataUser = this.state.formData;
@@ -55,14 +54,14 @@ class Auth extends Component {
         if (data.success) {
           AsyncStorage.setItem('@storage_Key', data.data.token);
           this.props.navigation.navigate('Home');
-          console.log(data);
+          console.warn(data);
         } else {
           this.setState({
             data: data,
             Response: true,
           });
           alert('username or password not match');
-          console.log(data);
+          console.warn(data);
         }
       })
       // .catch(err => console.log('error: ', err));

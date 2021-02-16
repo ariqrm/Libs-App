@@ -99,10 +99,12 @@ export class Home extends Component {
     console.log(this.props);
     return (
       <View>
-        <Header style={{
-              backgroundColor: '#fff',}}>
+        <Header
+          style={{
+            backgroundColor: '#fff',
+          }}>
           <Left>
-            <Title style={{color: 'grey', fontWeight: 'bold',}}>BOOKZ </Title>
+            <Title style={{color: 'grey', fontWeight: 'bold'}}>BOOKZ </Title>
           </Left>
           <Body style={{justifyContent: 'center'}}>
             <Input />
@@ -112,7 +114,12 @@ export class Home extends Component {
         <View>
           <View>
             <Text>Loading</Text>
-            <Image source={{ uri: 'https://thumbs.gfycat.com/LoneDetailedFairybluebird-max-1mb.gif'}} />
+            <Image
+              source={{
+                uri:
+                  'https://thumbs.gfycat.com/LoneDetailedFairybluebird-max-1mb.gif',
+              }}
+            />
           </View>
         </View>
       </View>
